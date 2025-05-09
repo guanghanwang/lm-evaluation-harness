@@ -1,0 +1,41 @@
+tag:
+  - countdown problem with 3 numbers
+task: countdown3
+dataset_path: /home/ubuntu/LLaDA/data/countdown3
+dataset_name: null
+dataset_kwargs:
+  data_files: 
+    train: /home/ubuntu/LLaDA/data/cd3_train.json
+    test: /home/ubuntu/LLaDA/data/cd3_test.json
+output_type: generate_until
+training_split: train
+test_split: test
+doc_to_text: !function utils.doc_to_text
+process_results: !function utils.process_results
+doc_to_target: "{{output}}"
+generation_kwargs:
+  until:
+    - "Question:"
+  do_sample: false
+  temperature: 0
+metric_list:
+  - metric: pass@1
+    aggregation: mean
+    higher_is_better: true
+  - metric: pass@10
+    aggregation: mean
+    higher_is_better: true
+repeats: 10
+filter_list:
+  - name: "take_first_k"
+    filter:
+      - function: "take_first_k"
+        k: 10
+num_fewshot: 4
+fewshot_config:
+  sampler: first_n
+  samples: !function utils.list_fewshot_samples
+dataset_kwargs:
+  trust_remote_code: true
+metadata:
+  version: 3.0

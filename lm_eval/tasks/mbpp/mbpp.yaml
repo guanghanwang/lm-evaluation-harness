@@ -8,13 +8,20 @@ doc_to_text: "You are an expert Python programmer, and here is your task: {{text
 doc_to_target: "{% if is_fewshot is defined %}{{code}}\n[DONE]{% else %}{{test_list[0]}}\n{{test_list[1]}}\n{{test_list[2]}}{% endif %}"
 target_delimiter: ""
 metric_list:
-  - metric: !function utils.pass_at_1
+  - metric: !function utils.pass_at_k
     aggregation: mean
     higher_is_better: true
+    k: [1, 10]
 generation_kwargs:
   until:
     - "[DONE]"
   do_sample: false
+repeats: 10
+filter_list:
+  - name: "take_first_k"
+    filter:
+      - function: "take_first_k"
+        k: 10
 num_fewshot: 3
 fewshot_config:
   sampler: first_n
