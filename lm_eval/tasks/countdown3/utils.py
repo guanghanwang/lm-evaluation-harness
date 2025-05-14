@@ -41,8 +41,8 @@ def extract_numbers(input_string):
 def is_correct(equation):
     if '=' not in equation:
         return False  # Not a valid equation format
-    left, right = equation.split('=')
     try:
+        left, right = equation.split('=')
         return eval(left.strip()) == int(right.strip())
     except Exception:
         return False  
